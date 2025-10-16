@@ -38,7 +38,7 @@ function openbook_html_getAuthors($authors, $bystatement, $contributions) {
 
 	$html_authors = "";
 
-	if (count($authors)>0) {
+	if (is_array($authors) && count($authors)>0) {
 
 		$authorlinks = array();
 
@@ -172,7 +172,7 @@ function openbook_html_getCoinsContents($title, $isbn, $authorlist, $publishplac
 	$authors_coins = "";
 
 	$authors = explode(",", $authorlist);
-	$authorcount = count($authors);
+	$authorcount = is_array($authors) ? count($authors) : 0;
 	for($i=0;$i<$authorcount;$i++) {
 		$author = $authors[$i]; //Open Library shows "William Shakespeare", i.e., first and lastname as one field;
 		$author = urlencode($author);
@@ -198,7 +198,7 @@ function openbook_html_getCoinsContents($title, $isbn, $authorlist, $publishplac
 
 function openbook_html_getLinks($links) {
 
-	if (count($links)==0) return "";
+	if (!is_array($links) || count($links)==0) return "";
 
 	$linklinks = array();
 

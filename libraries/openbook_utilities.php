@@ -103,7 +103,7 @@ function openbook_utilities_getUrlContents($url, $timeout, $proxy, $proxyport, $
 
 //test if 10 or 13 digits ISBN
 function openbook_utilities_validISBN($testisbn) {
-	return (ereg ("([0-9]{10})", $testisbn, $regs) || ereg ("([0-9]{13})", $testisbn, $regs));
+	return (preg_match ("/([0-9]{10})/", $testisbn, $regs) || preg_match ("/([0-9]{13})/", $testisbn, $regs));
 }
 
 function openbook_utilities_getDomain()
