@@ -3,9 +3,9 @@
 Plugin Name: OpenBook
 Plugin URI: http://wordpress.org/extend/plugins/openbook-book-data/
 Description: Displays a book's cover image, title, author, links, and other book data from Open Library.
-Version: 3.5.1
+Version: 3.5.2
 Author: John Miedema
-Author URI: http://code.google.com/p/openbook4wordpress/
+Author URI: http://johnmiedema.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

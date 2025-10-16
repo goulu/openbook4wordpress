@@ -159,14 +159,14 @@ function saveOption($option_name, $option_value) {
 <form method="post" action="">
 
 <h3><?php echo OB_OPTIONS_TEMPLATETEMPLATES_LANG; ?></h3>
-<p><?php echo OB_OPTIONS_TEMPLATETEMPLATES_DETAIL_LANG; ?><a href="http://code.google.com/p/openbook4wordpress/w/list">OpenBook Support Wiki</a>.</p>
+<p><?php echo OB_OPTIONS_TEMPLATETEMPLATES_DETAIL_LANG; ?></p>
 
 <table class="form-table">
 
 <tr valign="top">
 <td width="12%"><?php echo OB_OPTION_TEMPLATE1_LANG ?></td>
 <td><textarea cols="80" rows="8" name="<?php echo OB_OPTION_TEMPLATE1_NAME ?>" ><?php echo $template1; ?></textarea></td>
-<td><a href="http://code.google.com/p/openbook4wordpress/wiki/payitforward" class="pifButton">Pay it Forward for Literacy</a></td>
+<td></td>
 </tr>
 
 <tr valign="top">
