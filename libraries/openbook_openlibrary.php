@@ -62,15 +62,26 @@ function openbook_openlibrary_getBookData($domain, $booknumber, $timeout, $proxy
 
 }
 
+// Helper function to safely access object properties
+function openbook_openlibrary_getProperty($obj, $propertyname) {
+	if (!is_object($obj)) return null;
+	if (!isset($obj->{$propertyname})) return null;
+	return $obj->{$propertyname};
+}
+
 function openbook_openlibrary_extractValue($result, $elementname) {
-	$value = $result ->{$elementname};
+	// Check if property exists to avoid warnings
+	if (!isset($result->{$elementname})) return '';
+	$value = $result->{$elementname};
 	$value = htmlspecialchars($value, ENT_QUOTES);
 	return $value;
 }
 
 //no formatting
 function openbook_openlibrary_extractValueExact($result, $elementname) {
-	$value = $result ->{$elementname};
+	// Check if property exists to avoid warnings
+	if (!isset($result->{$elementname})) return '';
+	$value = $result->{$elementname};
 	return $value;
 }
 
@@ -100,7 +111,9 @@ function openbook_openlibrary_extractFirstFromList($result_array, $elementname) 
 function openbook_openlibrary_extractFirstFromArray($result_array, $elementname) {
 	if (!is_array($result_array) && !is_object($result_array)) return "";
 	if (is_array($result_array) && count($result_array)==0) return "";
-	$result =  $result_array ->{$elementname};
+	// Check if property exists to avoid warnings
+	if (!isset($result_array->{$elementname})) return "";
+	$result =  $result_array->{$elementname};
 	if (!is_array($result) || count($result)==0) return "";
 	$value = $result[0];
 	$value = htmlspecialchars($value);

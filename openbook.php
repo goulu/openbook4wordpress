@@ -48,7 +48,7 @@ class MyOpenBook
 //handles any processing when the plugin is activated
 function ob_activation_check() {
 
-	$plugin = trim( $GET['plugin'] );
+	$plugin = isset($_GET['plugin']) ? trim($_GET['plugin']) : '';
 
 	//if json_decode is missing (< PHP5.2) use local json library
 	if(!function_exists('json_decode')) {
@@ -161,15 +161,16 @@ function openbook_insertbookdata($atts, $content = null) {
 
 		$OL_URL = openbook_openlibrary_extractValue($bookdataresult, 'url');
 
-		$cover = $bookdataresult->{'cover'};
+		$cover = openbook_openlibrary_getProperty($bookdataresult, 'cover');
 		$OL_COVER_SMALL = openbook_openlibrary_extractValueExact($cover, 'small');
 		$OL_COVER_MEDIUM = openbook_openlibrary_extractValueExact($cover, 'medium');
 		$OL_COVER_LARGE = openbook_openlibrary_extractValueExact($cover, 'large');
 
 		$OL_TITLE = openbook_openlibrary_extractValue($bookdataresult, 'title');
 		$OL_SUBTITLE = openbook_openlibrary_extractValue($bookdataresult, 'subtitle');
+		$OL_TITLE_PREFIX = ''; // Initialize to empty string (not available from API)
 
-		$authors = $bookdataresult ->{'authors'};
+		$authors = openbook_openlibrary_getProperty($bookdataresult, 'authors');
 		$OL_AUTHORLIST = openbook_openlibrary_extractList($authors, 'name');
 		$OL_AUTHORURLLIST = openbook_openlibrary_extractList($authors, 'url');
 		$OL_AUTHORFIRST = openbook_openlibrary_extractFirstFromList($authors, 'name');
@@ -180,12 +181,13 @@ function openbook_insertbookdata($atts, $content = null) {
 //$contributions - Missing at present, expecting soon from Open Library
 //		$contributions = $bookdataresult ->{'contributions'};
 //		$OL_CONTRIBUTIONLIST = openbook_openlibrary_extractList($contributions, '???');
+		$OL_CONTRIBUTIONLIST = ''; // Initialize to empty string (not available from API)
 
-		$publishers = $bookdataresult ->{'publishers'};
+		$publishers = openbook_openlibrary_getProperty($bookdataresult, 'publishers');
 		$OL_PUBLISHERLIST = openbook_openlibrary_extractList($publishers, 'name');
 		$OL_PUBLISHERFIRST = openbook_openlibrary_extractFirstFromList($publishers, 'name');
 
-		$publishplaces = $bookdataresult ->{'publish_places'};
+		$publishplaces = openbook_openlibrary_getProperty($bookdataresult, 'publish_places');
 		$OL_PUBLISHPLACELIST = openbook_openlibrary_extractList($publishplaces, 'name');
 		$OL_PUBLISHPLACEFIRST = openbook_openlibrary_extractFirstFromList($publishplaces, 'name');
 
@@ -194,15 +196,17 @@ function openbook_insertbookdata($atts, $content = null) {
 
 //OL_SIZE MISSING - Missing at present, expecting soon from Open Library
 //		$OL_SIZE = openbook_openlibrary_extractValue($bookdataresult, 'physical_dimensions');
+		$OL_SIZE = ''; // Initialize to empty string (not available from API)
 
 		$OL_PAGES = openbook_openlibrary_extractValue($bookdataresult, 'number_of_pages');
 
 //OL_FORMAT MISSING - Missing at present, expecting soon from Open Library
 //		$OL_FORMAT = openbook_openlibrary_extractValue($bookdataresult, 'physical_format');
+		$OL_FORMAT = ''; // Initialize to empty string (not available from API)
 
 		$OL_WEIGHT = openbook_openlibrary_extractValue($bookdataresult, 'weight');
 
-		$identifiers = $bookdataresult ->{'identifiers'};
+		$identifiers = openbook_openlibrary_getProperty($bookdataresult, 'identifiers');
 		$OL_ID_AMAZON = openbook_openlibrary_extractFirstFromArray($identifiers, 'amazon');
 		$OL_ID_GOODREADS = openbook_openlibrary_extractFirstFromArray($identifiers, 'goodreads');
 		$OL_ID_GOOGLE = openbook_openlibrary_extractFirstFromArray($identifiers, 'google');
@@ -220,22 +224,23 @@ function openbook_insertbookdata($atts, $content = null) {
 		elseif (openbook_utilities_validISBN($booknumber)) $isbn = $booknumber;
 		$OL_ISBN = $isbn;
 
-		$subjects = $bookdataresult ->{'subjects'};
+		$subjects = openbook_openlibrary_getProperty($bookdataresult, 'subjects');
 		$OL_SUBJECTLIST = openbook_openlibrary_extractList($subjects, 'name');
 
 //OL_DESCRIPTION - Missing at present, expecting soon from Open Library
 //		$OL_DESCRIPTION = openbook_openlibrary_extractValueFromPair($bookdataresult, 'description');
+		$OL_DESCRIPTION = ''; // Initialize to empty string (not available from API)
 
-		$ebooks = $bookdataresult ->{'ebooks'};
+		$ebooks = openbook_openlibrary_getProperty($bookdataresult, 'ebooks');
 		$OL_PREVIEW_URL = openbook_openlibrary_extractFirstFromList($ebooks, 'preview_url');
 
-		$links = $bookdataresult ->{'links'};
+		$links = openbook_openlibrary_getProperty($bookdataresult, 'links');
 		$OL_LINKTITLES = openbook_openlibrary_extractList($links, 'title');
 		$OL_LINKURLS = openbook_openlibrary_extractList($links, 'url');
 		$OL_LINKTITLEFIRST = openbook_openlibrary_extractFirstFromList($links, 'title');
 		$OL_LINKURLFIRST = openbook_openlibrary_extractFirstFromList($links, 'url');
 
-		$excerpts = $bookdataresult ->{'excerpts'};
+		$excerpts = openbook_openlibrary_getProperty($bookdataresult, 'excerpts');
 		$OL_EXCERPT_COMMENT_FIRST = openbook_openlibrary_extractFirstFromList($excerpts, 'comment');
 		$OL_EXCERPT_TEXT_FIRST = openbook_openlibrary_extractFirstFromList($excerpts, 'text');
 
@@ -425,6 +430,7 @@ class openbook_arguments {
 
 		//revision number
 		//only applicable for OLID
+		$revisionnumber = ''; // Initialize to empty string by default
 		$olid_start = stripos($booknumber,"OLID");
 		$amp_start = stripos($booknumber,"@");
 		if (is_integer($olid_start) && is_integer($amp_start)) $revisionnumber = substr($booknumber, $amp_start + 1);
